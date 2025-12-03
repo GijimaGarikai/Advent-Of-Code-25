@@ -1,4 +1,7 @@
-file_path = "Advent-Of-Code-25/Day1/input.txt"
+import os
+
+base = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(base, "input.txt")
 
 with open(file_path, "r") as f:
     lines = f.readlines()
@@ -11,6 +14,7 @@ for line in lines:
     cur = (cur + (direction*turns)) % 100
     if cur == 0:
         total += 1
+        
 print(f"First Problem: {total}")
 
 total = 0
