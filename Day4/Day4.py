@@ -32,20 +32,24 @@ def getTotal(table, isPartTwo=False):
     totalRows = len(table)
     totalCols = len(table[0])
     ans = 0
-    changes = 1
-    while changes > 0:
-        changes = 0
-        for i in range(totalRows):
-            for j in range(totalCols):
-                neighs = countNeighs(i,j,table)
-                if table[i][j] == '@' and neighs < 4:
-                    ans += 1
-                    changes = 1
-                    if isPartTwo:
-                        table[i][j] = '.'
-        if not isPartTwo:
-           break
+    for i in range(totalRows):
+        for j in range(totalCols):
+            neighs = countNeighs(i,j,table)
+            if table[i][j] == '@' and neighs < 4:
+                ans += 1
+                if isPartTwo:
+                    table[i][j] = '.'
     return ans
+def first_problem(matrix):
+   return getTotal(matrix)
 
-print(f"First Problem: {getTotal(matrix)}")
-print(f"Second Problem: {getTotal(matrix, True)}")
+def second_problem(matrix):
+    total = 0
+    cur = getTotal(matrix, isPartTwo=True)
+    while cur > 0:
+        total += cur
+        cur = getTotal(matrix, isPartTwo=True)
+    return total
+
+print(f"First Problem: {first_problem(matrix)}")
+print(f"Second Problem: {second_problem(matrix)}")
