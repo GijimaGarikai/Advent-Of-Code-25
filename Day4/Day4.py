@@ -1,5 +1,7 @@
 import os
+from collections import deque
 
+# Read input
 base = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(base, "input.txt")
 
@@ -28,7 +30,7 @@ def countNeighs(x,y,table):
            total += 1
   return total
 
-def getTotal(table, isPartTwo=False):
+def getTotal(table):
     totalRows = len(table)
     totalCols = len(table[0])
     ans = 0
@@ -39,19 +41,61 @@ def getTotal(table, isPartTwo=False):
             neighs = countNeighs(i,j,table)
             if neighs < 4:
                 ans += 1
-                if isPartTwo:
-                    table[i][j] = '.'
     return ans
 def first_problem(matrix):
    return getTotal(matrix)
 
-def second_problem(matrix):
-    total = 0
-    cur = getTotal(matrix, isPartTwo=True)
-    while cur > 0:
-        total += cur
-        cur = getTotal(matrix, isPartTwo=True)
-    return total
+def second_problem(table):
+    rows, cols = len(table), len(table[0])
+    dirs = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
+
+
+    # Precompute neighbor counts
+    neigh = [[0]*cols for _ in range(rows)]
+
+    for r in range(rows):
+        for c in range(cols):
+            if table[r][c] != '@':
+                continue
+            count = 0
+            for dr, dc in dirs:
+                # get num of neighbors
+                curRow, curCol = r + dr, c + dc
+                if isAtSign(table, curRow, curCol):
+                    count += 1
+            neigh[r][c] = count
+
+    q = deque()
+    
+    # Initialize queue: all accessible rolls
+    for r in range(rows):
+        for c in range(cols):
+            if table[r][c] == '@' and neigh[r][c] < 4:
+                q.append((r, c))
+
+    removed = 0
+
+    while q:
+        r, c = q.popleft()
+
+        # If already removed, skip
+        if table[r][c] != '@':
+            continue
+
+        # Remove it
+        table[r][c] = '.'
+        removed += 1
+
+        # Update neighbors
+        for dr, dc in dirs:
+            curRow, curCol = r + dr, c + dc
+            if isAtSign(table, curRow, curCol):
+                neigh[curRow][curCol] -= 1
+                if neigh[curRow][curCol] < 4:
+                    q.append((curRow, curCol))
+
+    return removed
+
 
 print(f"First Problem: {first_problem(matrix)}")
 print(f"Second Problem: {second_problem(matrix)}")
