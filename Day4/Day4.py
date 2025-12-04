@@ -34,8 +34,10 @@ def getTotal(table, isPartTwo=False):
     ans = 0
     for i in range(totalRows):
         for j in range(totalCols):
+            if table[i][j] != '@':
+               continue
             neighs = countNeighs(i,j,table)
-            if table[i][j] == '@' and neighs < 4:
+            if neighs < 4:
                 ans += 1
                 if isPartTwo:
                     table[i][j] = '.'
