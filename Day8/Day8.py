@@ -64,7 +64,7 @@ parent = list(range(n))
 size = [1] * n
 components = n
 
-last_product = None
+lastProduct = None
 
 for dist, (a, b) in weights:
     merged = union(a, b)
@@ -73,10 +73,10 @@ for dist, (a, b) in weights:
         if components == 1:
             x1 = boxes[a][0]
             x2 = boxes[b][0]
-            last_product = x1 * x2
+            lastProduct = x1 * x2
             break
 
-solution2 = last_product
+solution2 = lastProduct
 
 print(f"First Problem: {solution1}")
 
